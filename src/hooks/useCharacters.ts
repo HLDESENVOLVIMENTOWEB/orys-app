@@ -3,11 +3,11 @@ import { fetchCharacters, FetchCharactersResponse } from '@/services/characterSe
 
 export function useCharacters() {
     return useInfiniteQuery<
-        FetchCharactersResponse,
-        Error,
-        FetchCharactersResponse,
-        [string],
-        number
+        FetchCharactersResponse,    // TQueryFnData
+        Error,                      // TError
+        FetchCharactersResponse,    // TData (cada página individual)
+        [string],                   // TQueryKey
+        number                      // TPageParam
     >({
         queryKey: ['characters'],
         queryFn: ({ pageParam = 1 }) => fetchCharacters(pageParam),
