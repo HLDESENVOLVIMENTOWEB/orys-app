@@ -5,7 +5,9 @@ import { useCharacters } from '@/hooks/useCharacters';
 import CharacterGrid from '@/components/CharacterGrid';
 import SearchInput from '@/components/SearchInput';
 import LoadMoreButton from '@/components/LoadMoreButton';
-import {Character} from "@/services/characterService";
+import { Character, FetchCharactersResponse } from '@/services/characterService';
+import { UseInfiniteQueryResult } from '@tanstack/react-query';
+
 
 export default function Home() {
     const [search, setSearch] = useState('');
@@ -18,19 +20,20 @@ export default function Home() {
         hasNextPage,
         isFetchingNextPage,
         error,
-    } = useCharacters();
+    }: UseInfiniteQueryResult<FetchCharactersResponse, Error> = useCharacters();
+
 
     const allCharacters: Character[] = useMemo(() => {
+        // @ts-ignore
         return data?.pages.flatMap((page) => page.characters) || [];
     }, [data]);
 
 
-    const filteredCharacters = useMemo(() => {
+    const filteredCharacters: Character[] = useMemo(() => {
         return allCharacters.filter((char) =>
             char.name.toLowerCase().includes(search.toLowerCase())
         );
     }, [allCharacters, search]);
-
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-start p-6 sm:p-10 font-sans bg-gray-50">
